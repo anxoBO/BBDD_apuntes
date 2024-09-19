@@ -51,4 +51,11 @@ Existen varias maneras de almacenar la información:
 
   Las BD  guardan su información en ficheros binarios por su estructura lógica y organizada para acceder rápidamente.
 
-- Bases de Datos: 
+- Bases de Datos: son un sistema de información que no depende de la aplicación que las utiliza. También guardan la información en ficheros pero las apps no se conectan a ellos directamente, sino que hay un software intermedio que gestiona las conexiones y peticiones. Estos sistemas son conocidos como **Sistema Gestor de Bases de Datos** (SGBD).
+
+**Una base de datos por tanto permite almacenar datos de forma independiente de
+las aplicaciones que acceden a ellos, y permite realizar sobre ellos operaciones de
+consulta y manipulación**
+
+## Arquitectura de una base de datos
+
