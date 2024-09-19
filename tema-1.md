@@ -33,6 +33,22 @@ se encarga de una función determinada:
 
 - **Nivel de conocimento:** A este nivel corresponden los sistemas orientados al apoyo de las operaciones generadas por los sistemas del nivel operativo. Los usuarios de estos sistemas suelen ser analistas de alguna área específica de lamorganización.
 
-- **Nivel administrativo:** 
+- **Nivel administrativo:** los usuarios de estos sistemas son los mandos intermedios encargados de definir a medio plazo su unidad organizativa. La información es más comparativa que descriptiva, y tanto interna (data warehause) como externa. Se utilizan herramientas interactivas para investigar de manera self service, o autoservicio. Están orientados a la toma de decisiones en un área concreta de la organización a partir del seguimiento de una serie de indicadores. (PKI)
+
+- **nivel estratégico:** Los usuarios de estos sistemas son la alta dirección con visión a medio-largo plazo. La herramienta principal son los cuadros de mando integrales (resumidos) que contienen información de todas las unidades de la organización de forma precisa.
 
 ![piramide](piramide.png)
+
+**Un sistema de imformación tiene como principal objetivo aportar valor a la información, por lo que el sistema de almacenamiento de la información será un componente principal**
+
+Existen varias maneras de almacenar la información:
+
+- Sistemas de ficheros: Un fichero es un conjunto ordenado de datos que tienen entre si una relación lógica y almacenados permanentemente. Se manipulan individualmente. En este sistema las aplicaciones acceden directamente a ellos,por lo que deben conocer su estructura, contenido... por tanto son muy dependientes.
+
+- Ficheros de texto: ficheros planos codificados como texto con distintos formatos (ascii y unicode) con extensiones (txt,html,php,java...). Los ficheros XML son un tipo especial de ficheros de texto que tienen definida una estructura.
+
+- Ficheros binarios: Todos los que no son de texto se codifican por medio de códigos hexadecimales. Requieren un formato para ser interpretados, si se cambia el formato no se abrirán correctamente. Usan diferentes extensiones dependiendo de su tipo: imagen (jpg,gif,tiff,...),comprensión(zip,rar,gz,...).
+
+  Las BD  guardan su información en ficheros binarios por su estructura lógica y organizada para acceder rápidamente.
+
+- Bases de Datos: 
