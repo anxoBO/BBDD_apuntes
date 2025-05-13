@@ -258,7 +258,7 @@ where c.numero not in(select p.num_cliente
 	--co obxectivo da sucursal. 
 select e.numero,e.ape1+' '+isnull(e.ape2,' ')+', '+e.nome as "nome empregado",e.cota_de_vendas
 from EMPREGADO e
-where e.cota_de_vendas>=(select s.obxectivo
+where isnull(e.cota_de_vendas,0)>=(select isnull(s.obxectivo,0)
 						 from SUCURSAL s
 						 where s.cidade='Vigo')
 
@@ -302,3 +302,234 @@ where c.num_empregado_asignado in (select e.numero
 									where e.id_sucursal_traballa in (select s.identificador
 																		from SUCURSAL s
 																		where s.rexion='OESTE'))
+
+
+
+/****************************************************/
+/******* FUNCIONES AGREGADO Y AGRUPACION ************/
+/****************************************************/
+use a23anxobo_ALMACEN_25
+
+-- 1. Visualizar todos los Oficios y el n?mero de EMPLEADOS de la empresa que los desempe?an
+select e.Oficio,count(e.IDEmpleado) as 'total empleados'
+from EMPLEADOS e
+group by e.Oficio
+-- 2. Visualizar todos los Oficios y el n?mero de EMPLEADOS de la empresa que lo desempe?an,
+-- siempre que sean m?s de uno
+select e.Oficio,count(e.IDEmpleado) as 'total empleados'
+from EMPLEADOS e
+group by e.Oficio
+having COUNT(e.IDEmpleado)>1
+
+-- 3. Hallar el gasto salarial (salario + comision) anual de la empresa, suponiendo 14 pagas
+SELECT SUM((e.Comision + e.Salario) * 14) AS gasto_salarial_total
+FROM EMPLEADOS e;
+
+-- 4. Obtener el n?mero de EMPLEADOS que hay por cada Oficio en cada departamento de la empresa
+select d.Nombre,count(e.IDEmpleado)as 'total empleados'
+from EMPLEADOS e right join DEPARTAMENTOS d 
+on e.IDDepartamento=d.IDDepartamento
+group by d.Nombre
+
+-- 5. Calcular el n?mero de Oficios distintos que hay en el departamento 30 de la tabla de EMPLEADOS
+select count(e.Oficio) as 'total oficios'
+from EMPLEADOS e right join DEPARTAMENTOS d 
+on e.IDDepartamento=d.IDDepartamento
+where d.IDDepartamento=30
+-- 6. Obtener los salarios medios por departamento
+select d.Nombre,AVG(e.Salario) as 'media salarios'
+from EMPLEADOS e right join DEPARTAMENTOS d 
+on e.IDDepartamento=d.IDDepartamento
+group by d.Nombre
+-- 7. Obtener para cada departamento, cuantos DIRECTORES hay.
+select distinct d.Nombre,count(e.Director)
+from DEPARTAMENTOS d left join EMPLEADOS e 
+on d.IDDepartamento=e.IDDepartamento
+group by d.Nombre
+
+-- 8. Obtener, para cada departamento, cuantos DIRECTORES hay en ese departamento y cual es su salario medio.
+select d.Nombre,e.Director,AVG(e.Salario)
+from DEPARTAMENTOS d left join EMPLEADOS e 
+on d.IDDepartamento=e.IDDepartamento
+group by d.Nombre,e.Director
+ 
+-- 9. Obtener el total de euros que hay invertidos entre todos los productos disponibles
+select sum(p.PrecioActual)as 'total euros'
+from PRODUCTOS p
+--10. Visualizar las unidades totales vendidas de cada producto a cada cliente, 
+--mostrando el n?mero de producto, el n?mero de cliente y la suma de las unidades
+ select count(p.Unidades),pr.IDProducto,c.IDCliente
+ from (PEDIDOS p inner join PRODUCTOS pr 
+ on p.IDProducto=pr.IDProducto)inner join CLIENTES c 
+ on c.IDCliente=p.IDCliente
+ group by pr.IDProducto,c.IDCliente
+--11. Obtener las fechas de pedido de los productos, del pedido m?s antiguo y el m?s reciente de cada producto, 
+--mostrando tambi?n el n?mero de producto correspondiente
+SELECT pr.IDProducto,MIN(p.Fecha_pedido) AS Fecha_Pedido_Antiguo,MAX(p.Fecha_pedido) AS Fecha_Pedido_Reciente
+FROM PEDIDOS p INNER JOIN PRODUCTOS pr ON p.IDProducto = pr.IDProducto
+GROUP BY pr.IDProducto;
+
+--12. Obtener los n?meros de cliente de los dos clientes con mayor n?mero de pedidos, 
+--indicando tambi?n cuantos pedidos han hecho.
+select  top 2 c.IDCliente,count(p.IDPedido)as 'total pedidos'
+from CLIENTES c left join PEDIDOS p 
+on c.IDCliente=p.IDCliente
+group by c.IDCliente
+order by [total pedidos]desc
+--13. Obtener las localidades en las que haya m?s de un cliente, visulizando cuantos clientes hay.
+ select c.Localidad,count(c.IDCliente) as 'total clientes'
+ from CLIENTES c
+ group by c.Localidad
+ having COUNT(c.IDCliente)>1
+
+
+--14. Listar los n?meros de cliente que tengan m?s de dos pedidos, ordenado por cantidad de pedidos
+ 
+
+--15. Obtener los datos de los 4 productos de los que m?s unidades se han vendido, 
+--visualizando el n?mero de producto y las unidades vendidas
+ 
+
+--16. Obtener el total de unidades por producto que hay entre todos los pedidos, 
+-- visualizando el n?mero de producto, la descripci?n y la suma de todas las unidades.
+ 
+
+--17. Obtener los salarios medios por departamento, ordenados descendentemente por dicho importe, 
+-- cuando dichos salarios medios sean inferiores a 3000 euros
+ 
+
+--18. Obtener los salarios medios por DEPARTAMENTOS de los vendedores y cu?ntos hay en cada departamento, 
+--siempre que ese salario medio sea mayor de 1.200
+ 
+
+--19. Obtener el n?mero de departamento con mayor salario medio de sus EMPLEADOS, 
+--visualizando tambi?n el valor del salario medio correspondiente.
+ 
+
+--20. Obtener aquellos IDs de productos de los que se ha realizado m?s de un pedido 
+--con la fecha de pedido anterior a 1 de enero del 2017.
+ 
+  
+ 
+
+/****************************************************/
+/*************** SUBCONSULTAS ***********************/
+/****************************************************/
+
+--1. Listar los nombres y c?digos de los DEPARTAMENTOS en los que haya EMPLEADOS.
+ 
+
+--2. Listar los nombres y c?digos de los DEPARTAMENTOS en los que no haya EMPLEADOS.
+ 
+
+--3-. Obtener los datos del pedido m?s reciente.
+ 
+
+--4. Pare el departamento de COMERCIAL, visualizar para cada Oficio la suma de los salarios de los EMPLEADOS
+ 
+
+--5. Obtener un listado con el n?mero y nombre de los clientes atendidos por el vendedor con nombre 'CALVO'.
+ 
+
+--6. Obtener un listado con los n?meros de pedido, n?meros de producto y fecha de los pedidos 
+--realizados por el cliente con nombre 'EDICIONES SANZ'.
+ 
+
+--7. Visualizar los datos del producto m?s caro.
+ 
+--8. Obtener los vendedores(comerciales) con dos o m?s clientes asignados.
+ 
+
+--9. Seleccionar aquellos EMPLEADOS cuyo salario sea menor a la media de los salarios de su departamento.
+
+
+--10. Obtener los nombres y las localidades de los clientes que tengan realizado pedidos.
+ 
+
+--11. Visualizar los vendedores con clientes que no tengan ning?n pedido.
+ 
+
+
+--12. Conseguir el nombre y Oficios de los EMPLEADOS del departamento 10 cuyo Oficio sea id?ntico al de cualquiera de los EMPLEADOS 
+-- del departamento de COMERCIAL.
+
+
+	
+--13. Seleccionar el departamento en el que trabaja el empleado con mayor salario, visualizando el nombre del departamento.
+
+
+
+--14. Obtener los datos del producto con m?s unidades en los pedidos de los clientes.
+ 
+
+/****************************************************/
+/********** CONSULTAS MULTITABLA ********************/
+/****************************************************/
+
+--1. Obtener un listado de clientes, indicando el n?mero de cliente y su nombre, y el n?mero y nombre de sus vendedores.
+ 
+
+--2. Listar todos los pedidos realizados con la descripci?n del producto y el nombre del cliente en lugar de sus n?meros.
+ 
+
+--3. Obtener una lista de los pedidos con la descripci?n del producto y el nombre del cliente de los clientes de MADRID.
+ 
+
+--4. Visualizar el nombre del departamento, la fecha de alta, el apellido, el oficio y el nombre de localidad de aquellos trabajadores 
+--que est?n en un departamento ubicado en una localidad que no contenga ninguna C en su nombre.
+ 
+
+--5. Obtener una lista de los nombres de los clientes con el importe acumulado de sus pedidos.
+
+
+
+--6. Obtener una lista de los pedidos con la descripci?n del producto y el nombre del cliente clasificados por el n?mero del cliente.
+
+
+
+--7. Obtener los nombres de los EMPLEADOS y los nombres de sus DEPARTAMENTOS, 
+--para aquellos EMPLEADOS que no son del departamento COMERCIALES y que entraron en la empresa despu?s del 1 de enero de 82.
+
+
+--8. Obtener una lista de los apellidos de los vendedores con el importe acumulado de sus pedidos.
+
+
+--9. Realizar un listado de los EMPLEADOS cuyo oficio es EMPLEADO, que incluir? su id de empleado, el nombre y el salario anual,
+-- sabiendo que el salario anual es el salario multiplicado por 14, e incluyendo en este listado el nombre del director del empleado.
+
+
+--10. Visualizar los productos con el n?mero total de pedidos, las unidades totales vendidas, y el precio unidad de cada uno de ellos incluyendo los que no tienen pedidos (en este caso se mostrar? un 0 en el total unidades vendidas)
+
+
+--11. Obtener el n?mero de pedidos por producto, visualizando el n?mero de producto, su descripci?n y el n?mero de pedidos correspondiente.
+
+
+--12. Visualizar los nombres de los clientes y la cantidad de pedidos realizados, incluyendo los que no hayan realizado ning?n pedido.
+
+
+
+--13. Realizar un listado de todos los productos con su descripci?n y el importe total (unidades totales por el precio unidad) de cada uno de ellos. Deben mostrarse todos los productos incluidos los que no tiene pedidos y en este caso en importe total se mostrar? un 0.
+
+
+--14. Visualizar los apellidos de los EMPLEADOS y el n?mero de clientes que tienen, visualizando todos los EMPLEADOS de la empresa tengan o no clientes asignados
+
+----
+ use a23anxobo_EMPRESA
+
+ select p.descricion,p.existencias,
+	case 
+		when p.existencias>20 then 'suficientes'
+		else 'insuficientes'
+		end as 'cantidade'
+from PRODUTO p 
+
+----
+select p.numero,pr.descricion,pr.prezo*p.cantidade as 'total',
+	case
+		when p.cantidade>20 then 'grande'
+		when p.cantidade<20 and p.cantidade>10 then 'normal'
+		when cantidade<10 and p.cantidade>0 then 'pequeño' 
+		else 'error'
+		end as 'tipo'
+from PEDIDO p inner join PRODUTO pr on pr.identificador=p.id_produto
+
